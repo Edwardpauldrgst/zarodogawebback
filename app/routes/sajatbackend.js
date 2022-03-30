@@ -1,6 +1,7 @@
 const { authJwt } = require("../middleware");
 const controller = require("../controllers/user.controller");
 
+
 module.exports = function(app) {
   app.use(function(req, res, next) {
     res.header(
@@ -141,21 +142,64 @@ module.exports = function(app) {
     
 
   })
+   app.get('/mindenadat', (req, res) => {
+    var mysql = require('mysql')
+    var connection = mysql.createConnection({
+      host: 'localhost',
+      user: 'root',
+      password: '',
+      database: 'sudoku_ranglista'
+    })
+    
+    connection.connect()
+    
+    connection.query('SELECT * from adatok order by adatok.ido asc', function (err, rows, fields) {
+      if (err) throw err
+    
+      console.log(rows)
+      res.send(rows)
+    })
+    
+    connection.end()
+    
+
+  })
   app.post('/adattorles', (req, res) => {
     var mysql = require('mysql')
     var connection = mysql.createConnection({
       host: 'localhost',
       user: 'root',
       password: '',
-      database: 'csevego'
+      database: 'sudoku_ranglista'
     })
     
     connection.connect()
     connection.query("DELETE FROM adatok where id=" + req.body.bevitel1, function (err, rows, fields) {
       if (err) throw err
     
-      console.log("Sikeres felvitel!")
-      res.send("Sikeres felvitel!")
+      console.log("Sikeres törlés!")
+      res.send("Sikeres törlés!")
+    })
+    
+    connection.end()
+    
+
+  })
+  app.post('/idoadattorles', (req, res) => {
+    var mysql = require('mysql')
+    var connection = mysql.createConnection({
+      host: 'localhost',
+      user: 'root',
+      password: '',
+      database: 'sudoku_ranglista'
+    })
+    
+    connection.connect()
+    connection.query("DELETE FROM adatok where datum >='" + req.body.bevitel1 + "' and datum<='" + req.body.bevitel2+"'", function (err, rows, fields) {
+      if (err) throw err
+    
+      console.log("Sikeres törlés!")
+      res.send("Sikeres törlés!")
     })
     
     connection.end()
