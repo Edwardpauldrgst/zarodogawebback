@@ -206,4 +206,25 @@ module.exports = function(app) {
     
 
   })
+
+  app.post('/score_post', (req, res) => {
+    var mysql = require('mysql')
+    var connection = mysql.createConnection({
+        host: 'localhost',
+        user: 'root',
+        password: '',
+        database: 'sudoku_ranglista'
+    })
+
+    connection.connect();
+
+    connection.query("INSERT INTO `adatok` (`id`, `nev`, `ido`, `meret`, `datum`) VALUES (NULL, '" + req.body.name + "', '" + req.body.time + "', '" + req.body.size + "', '" + req.body.date + "');", function (err, rows, fields) {
+    if (err) throw err;
+
+    console.log("sikerült");
+    res.send("Sikerült felvinni");
+    })
+
+    connection.end();
+  })
 };
